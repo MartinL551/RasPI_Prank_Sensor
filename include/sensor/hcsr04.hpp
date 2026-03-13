@@ -18,7 +18,8 @@ class Hcsr04 : public Sensor {
         void initTrig();
         void initEcho();
         void cleanup();
-
+        void sleepAndContinue(int duration);
+        
         unsigned int trig_pin_;
         unsigned int echo_pin_;
         const int pulse_duration_;

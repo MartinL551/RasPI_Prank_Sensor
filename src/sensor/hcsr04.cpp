@@ -10,8 +10,8 @@
 Hcsr04::Hcsr04(unsigned int trig_pin, unsigned int echo_pin)
     : trig_pin_(trig_pin),
       echo_pin_(echo_pin),
-      pulse_duration_(10),
-      timeout_duration_(5000),
+      pulse_duration_(100),
+      timeout_duration_(1000),
       chip_(nullptr),
       req_conf_(nullptr),
       trig_settings_(nullptr),
@@ -32,12 +32,49 @@ Hcsr04::Hcsr04(unsigned int trig_pin, unsigned int echo_pin)
         }
       }
 
+void Hcsr04::sleepAndContinue(int duration) {
+    std::this_thread::sleep_for(std::chrono::milliseconds(duration));
+}
+
 double Hcsr04::read_distance_cm(){
-    return 0.0;
+    gpiod_line_request_set_value(trig_req_, trig_pin_, GPIOD_LINE_VALUE_INACTIVE);
+    std::this_thread::sleep_for(std::chrono::microseconds(2));
+
+    // 10us trigger pulse
+    gpiod_line_request_set_value(trig_req_, trig_pin_, GPIOD_LINE_VALUE_ACTIVE);
+    std::this_thread::sleep_for(std::chrono::microseconds(10));
+    gpiod_line_request_set_value(trig_req_, trig_pin_, GPIOD_LINE_VALUE_INACTIVE);
+
+    // Wait for ECHO high with timeout
+    auto wait_start = std::chrono::steady_clock::now();
+    while (gpiod_line_request_get_value(echo_req_, echo_pin_) == GPIOD_LINE_VALUE_INACTIVE) {
+        auto now = std::chrono::steady_clock::now();
+        if (std::chrono::duration_cast<std::chrono::milliseconds>(now - wait_start).count() > pulse_duration_) {
+            std::cout << "Timeout waiting for echo start\n";
+            sleepAndContinue(timeout_duration_);
+        }
+    }
+
+    auto pulse_start = std::chrono::steady_clock::now();
+
+    // Wait for ECHO low with timeout
+    while (gpiod_line_request_get_value(echo_req_, echo_pin_) == GPIOD_LINE_VALUE_ACTIVE) {
+        auto now = std::chrono::steady_clock::now();
+        if (std::chrono::duration_cast<std::chrono::milliseconds>(now - pulse_start).count() > pulse_duration_) {
+            std::cout << "Timeout waiting for echo end\n";
+            sleepAndContinue(timeout_duration_);
+        }
+    }
+
+    auto pulse_end = std::chrono::steady_clock::now();
+    auto duration_us = std::chrono::duration_cast<std::chrono::microseconds>(pulse_end - pulse_start).count();
+
+
+    return duration_us * 0.0343 / 2.0;
 }
 
 bool Hcsr04::triggered(){
-    return true;
+    return read_distance_cm() < 50;
 }
 
 void Hcsr04::initChip() {
