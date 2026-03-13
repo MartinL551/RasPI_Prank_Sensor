@@ -8,7 +8,7 @@ set(CMAKE_CXX_EXTENSIONS off)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 add_library(core
-    src/core.cpp
+    src/sensor/hcsr04.cpp
 )
 
 target_include_directories(core
