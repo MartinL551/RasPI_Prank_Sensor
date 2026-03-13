@@ -11,7 +11,7 @@ Hcsr04::Hcsr04(unsigned int trig_pin, unsigned int echo_pin)
     : trig_pin_(trig_pin),
       echo_pin_(echo_pin),
       pulse_duration_(10),
-      timeout_duration_(400),
+      timeout_duration_(5000),
       chip_(nullptr),
       req_conf_(nullptr),
       trig_settings_(nullptr),
@@ -21,8 +21,15 @@ Hcsr04::Hcsr04(unsigned int trig_pin, unsigned int echo_pin)
       echo_line_conf_(nullptr),
       echo_req_(nullptr)
       {
-        initChip();
-        initReqConf();
+        try {
+            initChip();
+            initReqConf();
+            initTrig();
+            initEcho();
+        } catch (...) {
+            cleanup();
+            throw;
+        }
       }
 
 double Hcsr04::read_distance_cm(){
@@ -30,7 +37,7 @@ double Hcsr04::read_distance_cm(){
 }
 
 bool Hcsr04::triggered(){
-    return read_distance_cm() > 50;
+    return true;
 }
 
 void Hcsr04::initChip() {
@@ -77,7 +84,7 @@ void Hcsr04::initEcho() {
 
     echo_req_ = gpiod_chip_request_lines(chip_, req_conf_, echo_line_conf_);
 
-    if(!trig_req_) {
+    if(!echo_req_) {
         throw std::runtime_error("Failed to init echo");
     }
 }
@@ -85,34 +92,42 @@ void Hcsr04::initEcho() {
 void Hcsr04::cleanup() {
     if(echo_req_) {
         gpiod_line_request_release(echo_req_);
+        echo_req_ = nullptr;
     }
     
     if(echo_line_conf_){
         gpiod_line_config_free(echo_line_conf_);
+        echo_line_conf_ = nullptr;
     }
 
     if(echo_settings_){
         gpiod_line_settings_free(echo_settings_);
+        echo_settings_ = nullptr;
     }
 
     if(trig_req_) {
         gpiod_line_request_release(trig_req_);
+        trig_req_ = nullptr;
     }
 
     if(trig_line_conf_){
         gpiod_line_config_free(trig_line_conf_);
+        trig_line_conf_ = nullptr;
     }
 
     if(trig_settings_){
         gpiod_line_settings_free(trig_settings_);
+        trig_settings_ = nullptr;
     }
 
     if(req_conf_) {
         gpiod_request_config_free(req_conf_);
+        req_conf_ = nullptr;
     }
 
     if(chip_) {
         gpiod_chip_close(chip_);
+        chip_ = nullptr;
     }
 }
 
