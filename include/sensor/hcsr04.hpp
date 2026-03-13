@@ -3,9 +3,10 @@
 #include "sensor.hpp"
 #include <gpiod.h>
 
+
 class Hcsr04 : public Sensor {
     public:
-        Hcsr04(int trig_pin, int echo_pin);
+        Hcsr04(unsigned int trig_pin, unsigned int echo_pin);
         ~Hcsr04() override;
 
         bool triggered() override;
@@ -18,8 +19,8 @@ class Hcsr04 : public Sensor {
         void initEcho();
         void cleanup();
 
-        int trig_pin_;
-        int echo_pin_;
+        unsigned int trig_pin_;
+        unsigned int echo_pin_;
         const int pulse_duration_;
         const int timeout_duration_;
 
