@@ -9,6 +9,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 add_library(core
     src/sensor/hcsr04.cpp
+    src/audio/audioplayer.cpp
 )
 
 target_include_directories(core
