@@ -20,7 +20,7 @@ Hcsr04::Hcsr04(unsigned int trig_pin, unsigned int echo_pin)
       echo_settings_(nullptr),
       echo_line_conf_(nullptr),
       echo_req_(nullptr)
-      {
+    {
         try {
             initChip();
             initReqConf();
@@ -30,7 +30,7 @@ Hcsr04::Hcsr04(unsigned int trig_pin, unsigned int echo_pin)
             cleanup();
             throw;
         }
-      }
+    }
 
 void Hcsr04::sleepAndContinue(int duration) {
     std::this_thread::sleep_for(std::chrono::milliseconds(duration));

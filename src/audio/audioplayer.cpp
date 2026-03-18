@@ -1,14 +1,14 @@
 #include "audio/audioplayer.hpp"
+#include <sndfile.h>
 
 #include <string>
 
-bool AudioPlayer::AudioPlayer(std::string Path)
-: path_(path) {
-
+AudioPlayer::AudioPlayer(std::string& path)
+: path_(path) 
+{
 };
 
 bool AudioPlayer::load() {
-
 }
 
 bool AudioPlayer::play() {
