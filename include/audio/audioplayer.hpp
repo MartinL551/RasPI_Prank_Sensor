@@ -1,20 +1,16 @@
 #pragma once
 
-#include <string>
-#include <vector>
-
+#include <alsa/asoundlib.h>
+#include "audio/audiofile.hpp"
 class AudioPlayer {
-    AudioPlayer(std::string& path);
     public:
-        bool init();
-        bool load();
-        bool play();
-
-    private:
-        bool configureAsla();
+        AudioPlayer();
+        ~AudioPlayer();
         
-        std::string path_;
-        std::vector<short> buffer_;
-        int sampleRate_ = 0;
-        int channels_ = 0;
-};
+        bool init();
+        bool play(const AudioFile& audio);
+    private:
+        bool configureAlsa(int sampleRate, int channels);
+
+        snd_pcm_t* handle_ = nullptr;
+};  
