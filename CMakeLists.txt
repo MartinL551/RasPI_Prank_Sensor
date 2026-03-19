@@ -6,10 +6,12 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS off)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+file(COPY assets DESTINATION ${CMAKE_BINARY_DIR})
 
 add_library(core
     src/sensor/hcsr04.cpp
     src/audio/audioplayer.cpp
+    src/audio/audiofile.cpp
 )
 
 target_include_directories(core
@@ -32,4 +34,5 @@ target_link_libraries(app
     PRIVATE
         core
         gpiod
+        sndfile
 )

@@ -3,6 +3,8 @@
 
 #include <stdexcept>
 #include <string>
+#include <vector>
+#include <iostream>
 
 AudioFile::AudioFile(const std::string& path)
 {
@@ -18,15 +20,17 @@ void AudioFile::load(const std::string& path) {
         throw std::runtime_error("Failed to open file");
     }
 
-    info_ = info;
-    sf_count_t totalSamples = info_.frames * info_.channels;
+
+    sf_count_t totalSamples = info.frames * info.channels;
 
     if (totalSamples <= 0) {
         throw std::runtime_error("Invalid sample count");
     }
 
-    samples_.resize(static_cast<size_t>(totalSamples));
-    sf_count_t read = sf_read_short(file, samples_.data(), totalSamples);
+    std::vector<short> samples;
+
+    samples.resize(static_cast<size_t>(totalSamples));
+    sf_count_t read = sf_read_short(file, samples.data(), totalSamples);
 
     if(read != totalSamples) {
         throw std::runtime_error("Failed to read full audio data");
@@ -35,6 +39,10 @@ void AudioFile::load(const std::string& path) {
     if (sf_close(file) != 0) {
         throw std::runtime_error("Failed to close audio file");
     }
+
+    info_ = info;
+    samples_ = samples;
 }
+
 
  

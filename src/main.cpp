@@ -1,5 +1,5 @@
 #include "sensor/hcsr04.hpp"
-#include "audio/audioplayer.hpp"
+#include "audio/audiofile.hpp"
 #include <iostream>
 #include <exception>
 
@@ -8,15 +8,22 @@ constexpr unsigned int ECHO = 6;
 
 int main() {
     try{
-        Hcsr04 sensor(5, 6);
+        AudioFile file("assets/audio/test.wav");
+        // Hcsr04 sensor(5, 6);
 
-        while(true) {
-            if(sensor.triggered()) {
-                std::cout << "Triggered!\n";
-            } else {
-                std::cout << "Not Triggered!\n";
-            }
+        // while(true) {
+        //     if(sensor.triggered()) {
+        //         std::cout << "Triggered!\n";
+        //     } else {
+        //         std::cout << "Not Triggered!\n";
+        //     }
+        // }
+
+        for (const auto& sample : file.samples()) {
+            std::cout << sample << "\n";
         }
+
+   
     } catch(const std::exception& e) {
         std::cerr << "Fatal error: " << e.what() <<  "\n";
         return 1;
