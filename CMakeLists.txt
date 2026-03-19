@@ -35,4 +35,5 @@ target_link_libraries(app
         core
         gpiod
         sndfile
+        asound
 )

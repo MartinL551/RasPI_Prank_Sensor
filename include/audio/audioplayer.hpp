@@ -4,13 +4,11 @@
 #include "audio/audiofile.hpp"
 class AudioPlayer {
     public:
-        AudioPlayer();
-        ~AudioPlayer();
+        // ~AudioPlayer();
         
-        bool init();
-        bool play(const AudioFile& audio);
+        void init();
+        void play(const AudioFile& audio);
+        void configureAlsa(int sampleRate, int channels);
     private:
-        bool configureAlsa(int sampleRate, int channels);
-
         snd_pcm_t* handle_ = nullptr;
 };  

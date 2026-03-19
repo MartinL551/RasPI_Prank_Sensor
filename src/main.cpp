@@ -1,3 +1,4 @@
+#include "audio/audioplayer.hpp"
 #include "sensor/hcsr04.hpp"
 #include "audio/audiofile.hpp"
 #include <iostream>
@@ -9,6 +10,11 @@ constexpr unsigned int ECHO = 6;
 int main() {
     try{
         AudioFile file("assets/audio/test.wav");
+        AudioPlayer player;
+        player.init();
+        player.configureAlsa(file.sampleRate(), file.channels_());
+        player.play(file);
+
         // Hcsr04 sensor(5, 6);
 
         // while(true) {
@@ -18,11 +24,6 @@ int main() {
         //         std::cout << "Not Triggered!\n";
         //     }
         // }
-
-        for (const auto& sample : file.samples()) {
-            std::cout << sample << "\n";
-        }
-
    
     } catch(const std::exception& e) {
         std::cerr << "Fatal error: " << e.what() <<  "\n";

@@ -1,27 +1,28 @@
 #include "audio/audioplayer.hpp"
+#include <alsa/asoundlib.h>
 #include <sndfile.h>
 
-#include <string>
 
-AudioPlayer::AudioPlayer(std::string& path)
-: path_(path) 
-{
-};
-
-bool AudioPlayer::load() {
+void AudioPlayer::init() {
+    snd_pcm_open(&handle_, "default", SND_PCM_STREAM_PLAYBACK, 0);
 }
 
-bool AudioPlayer::play() {
-
+void AudioPlayer::configureAlsa(int sampleRate, int channels) {
+    snd_pcm_set_params(handle_, SND_PCM_FORMAT_S16_LE, SND_PCM_ACCESS_RW_INTERLEAVED, channels, sampleRate, 1, 500000);
 }
 
-bool AudioPlayer::init() {
+void AudioPlayer::play(const AudioFile& audio){
+    snd_pcm_writei(handle_, audio.samples().data(), audio.frames_());
 
+    snd_pcm_drain(handle_);
+
+    if (handle_) {
+        snd_pcm_close(handle_);
+    }
 }
 
-bool AudioPlayer::configureAsla() {
-    
-}
+
+
 
 
  

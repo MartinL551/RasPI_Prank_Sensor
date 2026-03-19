@@ -7,8 +7,7 @@
 class AudioFile {
     public:
         explicit AudioFile(const std::string& path);
-        ~AudioFile();
-        
+
         const std::vector<short>& samples() const { return  samples_;};
         int sampleRate() const { return info_.samplerate;};
         int channels_() const {return info_.channels;};
