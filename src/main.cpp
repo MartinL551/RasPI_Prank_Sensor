@@ -13,17 +13,18 @@ int main() {
         AudioPlayer player;
         player.init();
         player.configureAlsa(file.sampleRate(), file.channels_());
-        player.play(file);
 
-        // Hcsr04 sensor(5, 6);
 
-        // while(true) {
-        //     if(sensor.triggered()) {
-        //         std::cout << "Triggered!\n";
-        //     } else {
-        //         std::cout << "Not Triggered!\n";
-        //     }
-        // }
+        Hcsr04 sensor(5, 6);
+
+        while(true) {
+            if(sensor.triggered()) {
+                std::cout << "Triggered!\n";
+                player.play(file);
+            } else {
+                std::cout << "Not Triggered!\n";
+            }
+        }
    
     } catch(const std::exception& e) {
         std::cerr << "Fatal error: " << e.what() <<  "\n";
