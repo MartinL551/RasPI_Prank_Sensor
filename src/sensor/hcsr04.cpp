@@ -11,7 +11,7 @@ Hcsr04::Hcsr04(unsigned int trig_pin, unsigned int echo_pin)
     : trig_pin_(trig_pin),
       echo_pin_(echo_pin),
       pulse_duration_(100),
-      timeout_duration_(1000),
+      timeout_duration_(500),
       chip_(nullptr),
       req_conf_(nullptr),
       trig_settings_(nullptr),

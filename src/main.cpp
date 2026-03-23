@@ -9,12 +9,10 @@ constexpr unsigned int ECHO = 6;
 
 int main() {
     try{
-        AudioFile file("assets/audio/test.wav");
+        AudioFile file("assets/audio/testbeep.wav");
         AudioPlayer player;
         player.init();
         player.configureAlsa(file.sampleRate(), file.channels_());
-
-
         Hcsr04 sensor(5, 6);
 
         while(true) {
@@ -30,6 +28,6 @@ int main() {
         std::cerr << "Fatal error: " << e.what() <<  "\n";
         return 1;
     }
-
+    
     return 0;
 }
