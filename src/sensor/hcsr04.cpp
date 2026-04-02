@@ -1,15 +1,16 @@
 #include "sensor/hcsr04.hpp"
+#include "sensor/pinconfig.hpp"
 #include <gpiod.h>
 #include <chrono>
-#include <cstdint>
 #include <cstring>
 #include <iostream>
 #include <stdexcept>
 #include <thread>
+#include <vector>
 
-Hcsr04::Hcsr04(unsigned int trig_pin, unsigned int echo_pin)
-    : trig_pin_(trig_pin),
-      echo_pin_(echo_pin),
+Hcsr04::Hcsr04(std::vector<PinConfig> pinConfig)
+    : trig_pin_(pinConfig[0].pin),
+      echo_pin_(pinConfig[1].pin),
       pulse_duration_(100),
       timeout_duration_(500),
       chip_(nullptr),

@@ -1,12 +1,14 @@
 #pragma once
 
 #include "sensor.hpp"
+#include "sensor/pinconfig.hpp"
 #include <gpiod.h>
+#include <vector>
 
 
 class Hcsr04 : public Sensor {
     public:
-        Hcsr04(unsigned int trig_pin, unsigned int echo_pin);
+        Hcsr04(std::vector<PinConfig>);
         ~Hcsr04() override;
 
         bool triggered() override;

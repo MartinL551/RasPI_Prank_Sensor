@@ -4,6 +4,7 @@
 #include "sensor/sensorconfig.hpp"
 #include "sensor/sensorfactory.hpp"
 #include "sensor/sensortype.hpp"
+#include "setup/setupmenu.hpp"
 #include <iostream>
 #include <exception>
 
@@ -16,15 +17,15 @@ int main() {
         AudioPlayer player;
         player.init();
         player.configureAlsa(file.sampleRate(), file.channels_());
-        SensorConfig config{
-            SensorType::HCSR04,
-            {5, 6}
-        };
+        SetupMenu setup;
 
-        std::unique_ptr<Sensor> sensor = SensorFactory::create(config);
+        SetupConfig config =  setup.setup();
+        
+
+    
 
         while(true) {
-            if(sensor->triggered()) {
+            if(config.sensor->triggered()) {
                 std::cout << "Triggered!\n";
                 player.play(file);
             } else {

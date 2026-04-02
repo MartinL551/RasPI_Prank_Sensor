@@ -7,5 +7,5 @@
 
 struct SetupConfig {
     std::unique_ptr<Sensor> sensor;
-    AudioPlayer player;
+    // AudioPlayer player;
 };

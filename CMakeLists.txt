@@ -11,8 +11,10 @@ file(COPY assets DESTINATION ${CMAKE_BINARY_DIR})
 add_library(core
     src/sensor/hcsr04.cpp
     src/sensor/sensorfactory.cpp
+    src/sensor/sensormetadata.cpp
     src/audio/audioplayer.cpp
     src/audio/audiofile.cpp
+    src/setup/setupmenu.cpp
 )
 
 target_include_directories(core

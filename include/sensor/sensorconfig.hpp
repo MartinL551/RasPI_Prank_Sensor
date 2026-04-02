@@ -1,10 +1,11 @@
 #pragma once
 
+#include "sensor/pinconfig.hpp"
 #include "sensortype.hpp"
 #include <vector>
 
 
 struct SensorConfig {
     SensorType type;
-    std::vector<unsigned int> pins;
+    std::vector<PinConfig> pins;
 };

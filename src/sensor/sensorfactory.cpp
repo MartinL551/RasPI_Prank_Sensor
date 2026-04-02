@@ -22,5 +22,5 @@ std::unique_ptr<Sensor> SensorFactory::createHcsr04(const SensorConfig& config) 
         throw std::runtime_error("Config Incorrect: HCSR04 requries 2 pins");
     }
 
-    return std::make_unique<Hcsr04>(config.pins[0], config.pins[1]);
+    return std::make_unique<Hcsr04>(config.pins);
 }
