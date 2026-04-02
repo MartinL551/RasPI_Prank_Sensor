@@ -16,9 +16,9 @@ class SetupMenu{
     private:
         AudioPlayer setupPlayer();
         std::unique_ptr<Sensor> setupSensor();
-        SensorOption matchSensorType(int choice);
+        SensorOption matchSensorType(unsigned int choice);
         SensorOption promptSensorType();
-        int promptInt(std::string msg, size_t maxValue);
+        unsigned int promptInt(std::string msg, size_t maxValue);
         std::vector<PinConfig> promptSensorPins(const SensorOption& option);
         unsigned int promptSensorPin(std::string sensorName, const PinOption& option);
 };

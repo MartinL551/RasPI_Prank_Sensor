@@ -21,7 +21,7 @@ SetupConfig SetupMenu::setup() {
     config.sensor = setupSensor();
 
     return config;
-};
+}
 
 
 std::unique_ptr<Sensor> SetupMenu::setupSensor() {
@@ -42,7 +42,7 @@ std::vector<PinConfig> SetupMenu::promptSensorPins(const SensorOption& option) {
     for(size_t i = 0; i < reqPins.size();  i++) {
         const auto& pinOption = reqPins[i];
         unsigned int mappedPin = promptSensorPin(option.name, pinOption);
-        const PinConfig& pinConfig = {pinOption.role, mappedPin}; 
+        PinConfig pinConfig = {pinOption.role, mappedPin}; 
         pinConfigs.push_back(pinConfig);
     }
 
@@ -51,26 +51,22 @@ std::vector<PinConfig> SetupMenu::promptSensorPins(const SensorOption& option) {
 
 
 unsigned int SetupMenu::promptSensorPin(std::string sensorName, const PinOption& option) {
-    while (true) {
-        std::cout << "Pick Pi (GPIO number) Mapping for Sensor " << sensorName << " and needed sensor pin " << option.name << "\n";
-        
-        //40 is GPIO count of Pi pins
-        unsigned int choice = SetupMenu::promptInt("> ", 40);
+    std::cout << "Pick Pi (GPIO number) Mapping for Sensor " << sensorName << " and needed sensor pin " << option.name << "\n";
+    
+    //40 is GPIO count of Pi pins
+    unsigned int choice = promptInt("> ", 40);
 
-        return choice;
-    }
+    return choice;
 }
 
-SensorOption SetupMenu::matchSensorType(int choice) {
-    for(size_t i = 0; i < SENSOR_OPTIONS.size(); i++ ){
-        const auto& option = SENSOR_OPTIONS[i];
-        
-        if(i == static_cast<size_t>(choice - 1)) {
-            return option;
-        }
+SensorOption SetupMenu::matchSensorType(unsigned int choice) {
+    size_t index = static_cast<size_t>(choice - 1);
+
+    if (index >= SENSOR_OPTIONS.size()) {
+        throw std::runtime_error("Invalid sensor selection");
     }
-    
-    throw std::runtime_error("Invalid sensor selection");
+
+    return SENSOR_OPTIONS[index];
 }
 
 
@@ -83,36 +79,35 @@ SensorOption SetupMenu::promptSensorType() {
             std::cout << (i + 1) << ". " << option.name << "\n";
         }
 
-        unsigned int choice = SetupMenu::promptInt("> ", SENSOR_OPTIONS.size());
+        unsigned int choice = promptInt("> ", SENSOR_OPTIONS.size());
 
         try {
-            return SetupMenu::matchSensorType(choice);
+            return matchSensorType(choice);
         } catch (...) {
             std::cout << "Invalid option, try again";
         }
     }
 }
 
-int SetupMenu::promptInt(std::string msg, size_t maxValue) {
+unsigned int SetupMenu::promptInt(const std::string msg, size_t maxValue) {
     unsigned int value;
 
     while (true) {
         std::cout << msg;
 
-        if(std::cin >> value) {
-            if(value < 1 || static_cast<size_t>(value) > maxValue) {
-                std::cout << "Must be a valid Integer value and larger than 0";
-            } else {
-                 return value;
-            }       
+        if (std::cin >> value) {
+            if (value >= 1 && static_cast<size_t>(value) <= maxValue) {
+                return value;
+            }
+
+            std::cout << "Value must be between 1 and " << maxValue << "\n";
+        } else {
+            std::cout << "Must be a valid integer value\n";
         }
 
-        std::cout << "Must be a valid Integer value";
-       
         std::cin.clear();
         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     }
 }
-
 
 
