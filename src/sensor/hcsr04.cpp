@@ -1,5 +1,8 @@
 #include "sensor/hcsr04.hpp"
 #include "sensor/pinconfig.hpp"
+#include "sensor/pinrole.hpp"
+#include <cstddef>
+#include <cstdio>
 #include <gpiod.h>
 #include <chrono>
 #include <cstring>
@@ -8,9 +11,9 @@
 #include <thread>
 #include <vector>
 
-Hcsr04::Hcsr04(std::vector<PinConfig> pinConfig)
-    : trig_pin_(pinConfig[0].pin),
-      echo_pin_(pinConfig[1].pin),
+Hcsr04::Hcsr04(const std::vector<PinConfig>& pinConfig)
+    : trig_pin_(0),
+      echo_pin_(0),
       pulse_duration_(100),
       timeout_duration_(500),
       chip_(nullptr),
@@ -21,7 +24,23 @@ Hcsr04::Hcsr04(std::vector<PinConfig> pinConfig)
       echo_settings_(nullptr),
       echo_line_conf_(nullptr),
       echo_req_(nullptr)
-    {
+    { 
+        for(size_t i = 0; i < pinConfig.size();  i++) {
+            auto& config = pinConfig[i];
+
+            switch (config.role) {
+                case PinRole::ECHO:
+                    echo_pin_ = config.pin;
+                    break;
+                case PinRole::TRIG:
+                    trig_pin_ = config.pin;
+                    break;
+                default:
+                    throw std::runtime_error("Pin mapping mismatch");
+                    break;
+            }
+        }
+
         try {
             initChip();
             initReqConf();

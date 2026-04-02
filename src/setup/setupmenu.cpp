@@ -24,8 +24,6 @@ SetupConfig SetupMenu::setup() {
 };
 
 
-
-
 std::unique_ptr<Sensor> SetupMenu::setupSensor() {
     SensorOption option = promptSensorType();
     std::vector<PinConfig> pinConfig = promptSensorPins(option);
@@ -37,7 +35,7 @@ std::unique_ptr<Sensor> SetupMenu::setupSensor() {
     return SensorFactory::create(sensorConfig);
 }
 
-std::vector<PinConfig> SetupMenu::promptSensorPins(SensorOption option) {
+std::vector<PinConfig> SetupMenu::promptSensorPins(const SensorOption& option) {
     std::vector<PinOption> reqPins = sensor::getRequiredPins(option.type);
     std::vector<PinConfig> pinConfigs;
 
@@ -52,9 +50,9 @@ std::vector<PinConfig> SetupMenu::promptSensorPins(SensorOption option) {
 }
 
 
-unsigned int SetupMenu::promptSensorPin(std::string sensorName, PinOption option) {
+unsigned int SetupMenu::promptSensorPin(std::string sensorName, const PinOption& option) {
     while (true) {
-        std::cout << "Pick Pi Mapping for Sensor " << sensorName << " and needed sensor pin " << option.name << "\n";
+        std::cout << "Pick Pi (GPIO number) Mapping for Sensor " << sensorName << " and needed sensor pin " << option.name << "\n";
         
         //40 is GPIO count of Pi pins
         unsigned int choice = SetupMenu::promptInt("> ", 40);
@@ -78,6 +76,8 @@ SensorOption SetupMenu::matchSensorType(int choice) {
 
 SensorOption SetupMenu::promptSensorType() {
     while (true) {
+        std::cout << "Please pick a sensor from the below options" << "\n";
+
         for(size_t i = 0; i < SENSOR_OPTIONS.size(); i++) {
             const auto& option = SENSOR_OPTIONS[i];
             std::cout << (i + 1) << ". " << option.name << "\n";

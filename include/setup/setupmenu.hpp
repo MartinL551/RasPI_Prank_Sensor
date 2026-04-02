@@ -19,6 +19,6 @@ class SetupMenu{
         SensorOption matchSensorType(int choice);
         SensorOption promptSensorType();
         int promptInt(std::string msg, size_t maxValue);
-        std::vector<PinConfig> promptSensorPins(SensorOption option);
-        unsigned int promptSensorPin(std::string sensorName, PinOption option);
+        std::vector<PinConfig> promptSensorPins(const SensorOption& option);
+        unsigned int promptSensorPin(std::string sensorName, const PinOption& option);
 };

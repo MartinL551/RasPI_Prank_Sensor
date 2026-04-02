@@ -8,7 +8,7 @@
 
 class Hcsr04 : public Sensor {
     public:
-        Hcsr04(std::vector<PinConfig>);
+        Hcsr04(const std::vector<PinConfig>&);
         ~Hcsr04() override;
 
         bool triggered() override;
