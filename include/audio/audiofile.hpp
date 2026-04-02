@@ -12,7 +12,7 @@ class AudioFile {
         int sampleRate() const { return info_.samplerate;};
         int channels_() const {return info_.channels;};
         int frames_() const { return info_.frames;};
-
+        
     private:
         void load(const std::string& path);
         std::vector<short> samples_;

@@ -20,7 +20,6 @@ void AudioFile::load(const std::string& path) {
         throw std::runtime_error("Failed to open file");
     }
 
-
     sf_count_t totalSamples = info.frames * info.channels;
 
     if (totalSamples <= 0) {
